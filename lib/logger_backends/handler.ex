@@ -41,7 +41,7 @@ defmodule LoggerBackends.Handler do
       mode ->
         %{gl: gl} = metadata
         %{truncate: truncate, utc_log: utc_log?} = config
-        level = erlang_level_to_elixir_level(erl_level)
+        level = erl_level
         message = Logger.Formatter.format_event(event, truncate)
         timestamp = Map.get_lazy(metadata, :time, fn -> :os.system_time(:microsecond) end)
         date_time_ms = Logger.Formatter.system_time_to_date_time_ms(timestamp, utc_log?)
@@ -111,15 +111,4 @@ defmodule LoggerBackends.Handler do
   defp form_fa(fun, arity) do
     Atom.to_string(fun) <> "/" <> Integer.to_string(arity)
   end
-
-  defp erlang_level_to_elixir_level(:none), do: :error
-  defp erlang_level_to_elixir_level(:emergency), do: :error
-  defp erlang_level_to_elixir_level(:alert), do: :error
-  defp erlang_level_to_elixir_level(:critical), do: :error
-  defp erlang_level_to_elixir_level(:error), do: :error
-  defp erlang_level_to_elixir_level(:warning), do: :warn
-  defp erlang_level_to_elixir_level(:notice), do: :info
-  defp erlang_level_to_elixir_level(:info), do: :info
-  defp erlang_level_to_elixir_level(:debug), do: :debug
-  defp erlang_level_to_elixir_level(:all), do: :debug
 end
